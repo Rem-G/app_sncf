@@ -3,5 +3,5 @@ from . import views
 
 
 urlpatterns = [
-	re_path(r'^gares', views.gares),
+	re_path(r'^gares', views.afficher_gares),
 ]

@@ -5,6 +5,7 @@ from geojson_rewind import rewind
 import requests
 import json
 import geojson
+from datetime import datetime, timedelta
 
 token_auth = 'c644ccc4-01b2-4b7e-863d-4aa700dc7d73'
 
@@ -61,8 +62,20 @@ def fichier_gares(fichier):
 
 	return infos_gares
 
-def gares(request):
-	infos_gares = fichier_gares('gares.json')
+def maj_json(fichier):
+	dict_gares = gares(fichier)
+	print(len(dict_gares), int(infos_gares_api()['total_items']))
+	print(type(len(dict_gares)), type(int(infos_gares_api()['total_items'])))
+
+
+	if len(dict_gares) is not int(infos_gares_api()['total_items']): #fichier à mettre à jour
+		fichier_gares(fichier.split(".")[0]+"_new.json")
+	else:
+		print("fichier à jour")
+
+
+def gares(fichier):
+	infos_gares = fichier_gares(fichier)
 
 	dict_gares = dict()
 	gare = dict()
@@ -77,8 +90,14 @@ def gares(request):
 			if 'coord' in keys:
 				gare['coord'] = keys['coord']
 			dict_gares[keys['id']] = gare
-		#	dict_gares.update({keys['id'] : gare})
 			gare = dict()
-	return JsonResponse(dict_gares, safe = False)
 
-	#return JsonResponse(infos_gares, safe=False)
+	return dict_gares
+	#dict.values()
+
+def afficher_gares(request):
+	fichier = 'gares.json'
+	maj_json(fichier)
+
+	infos_gares = fichier_gares(fichier)
+	return JsonResponse(gares(fichier), safe = False)
