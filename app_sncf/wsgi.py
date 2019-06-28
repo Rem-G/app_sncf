@@ -13,7 +13,9 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'app_sncf.settings')
 
+"""
 os.environ['http_proxy'] = "http://direct.proxy.i2:8080"
 os.environ['https_proxy'] = "http://direct.proxy.i2:8080"
+"""
 
 application = get_wsgi_application()

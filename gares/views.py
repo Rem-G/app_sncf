@@ -38,7 +38,7 @@ def fichier_gares(fichier):
 	infos_gares = list()
 
 	try:
-		with open(fichier, 'r') as json_file:
+		with open(fichier, 'r', encoding='utf-8') as json_file:
 			infos_gares = json.load(json_file)
 			if sum(1 for line in infos_gares) > 0:
 				file_is_empty = False
@@ -54,9 +54,9 @@ def fichier_gares(fichier):
 			for ligne in page:
 				for element in page[ligne]:
 					if 'name' in element:
-						infos_gares.append(element['name'])
+						infos_gares.append(element)
 
-		with open(fichier, 'w') as file:
+		with open(fichier, 'w', encoding='utf-8') as file:
 			json.dump(infos_gares, file, indent=3)
 
 	return infos_gares
@@ -77,6 +77,8 @@ def gares(request):
 			if 'coord' in keys:
 				gare['coord'] = keys['coord']
 			dict_gares[keys['id']] = gare
+		#	dict_gares.update({keys['id'] : gare})
+			gare = dict()
 	return JsonResponse(dict_gares, safe = False)
 
 	#return JsonResponse(infos_gares, safe=False)
