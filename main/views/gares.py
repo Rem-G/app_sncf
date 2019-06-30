@@ -14,7 +14,7 @@ class ContexteGares():
 
 	def __init__(self, request):
 	    self.request = request
-	    self.message_err = list()
+	    self.message_err_gares = list()
 	    self.token_auth = 'c644ccc4-01b2-4b7e-863d-4aa700dc7d73'
 	    self.main()
 

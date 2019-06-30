@@ -1,9 +1,10 @@
 from django.urls import path, re_path
+from django.conf.urls import url
 from .views import views
 
 
 urlpatterns = [
-	re_path(r'^gares$', views.afficher_gares),
-	re_path(r'^gares/update$', views.update_gares)
+	url(r'^voyage$', views.voyage, name='voyage'),
+	re_path(r'^voyage/gares/update$', views.update_gares)
 
 ]

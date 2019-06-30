@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.db import transaction
 
 from .gares import ContexteGares
+from .voyage import ContexteVoyage
 
 
 @login_required
@@ -15,7 +16,8 @@ def update_gares(request):
 	else:
 		return HttpResponse("Fichier ms à jour")
 
-
-def afficher_gares(request):
-	contexte_gares = ContexteGares(request).afficher_gares_contexte()
+def voyage(request):
+	contexte_gares = ContexteGares(request).afficher_gares_contexte()#Obsolète ?
+	contexte_voyage = ContexteVoyage(request)
 	return render(request, 'main.html', locals())
+

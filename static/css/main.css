@@ -26,8 +26,8 @@
     display: inline-block;
     margin-left: 5%;
     margin-right: 5%;
-    border:         none;
-    border-left:    1px solid hsla(2000, 15%, 50%,1000);
-    height:         20vh;
-    width:          1px;       
+    border: none;
+    border-left: 1px solid hsla(2000, 15%, 50%,1000);
+    height: 20vh;
+    width: 1px;       
 }

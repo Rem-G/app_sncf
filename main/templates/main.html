@@ -18,33 +18,31 @@
 		    </div>
 		    <div class="card-body">
 		        <div class="form-horizontal">
-		        	<form role="itineraire" method="post">
+		        	<form role="voyage" method="post">
 			            <div class="form-group" id="choix_depart_arrivee">
 		            		{% csrf_token %} 
 						    <input type="text" placeholder="Départ" id="search_depart">
 						     <br>
 						    <input type="text" placeholder="Arrivée" id="search_arrivee">
 				        </div>
-						<div class="vertical-line">
-						</div>
+						<div class="vertical-line"></div>
 						<span class="span_datetime">Aller</span>
 						<br>
-    					<input class="form-rounded" type="datetime-local" placeholder="Aller : date et horaire" id="datetime_depart">
-    					<br>
+             			<input type="text" class="datetimepicker-input form-rounded" id="datetimepicker1" data-toggle="datetimepicker" data-target="#datetimepicker1" placeholder="Aller : dates et horaires" />
+    					<br><br>
     					<span class="span_datetime">Retour</span>
     					<br>
-    					<input class="form-rounded" type="datetime-local" placeholder="Retour : date et horaire" id="datetime_arrivee">
-				     </form>
-				</div>
-				<br><br>
-				<div style='text-align: center;'>
-				<button type="button" class="btn btn-primary btn-lg" id="bouton_recherche"><i class="fas fa-search"></i>  Rechercher</button>
+            			<input type="text" class="datetimepicker-input form-rounded" id="datetimepicker2" data-toggle="datetimepicker" data-target="#datetimepicker2" placeholder="Retour : dates et horaires" />		
+						<br><br><br>
+						<div style='text-align: center;'>
+							<button type="submit" class="btn btn-primary btn-lg" name="recherche_voyage" id="bouton_recherche"><i class="fas fa-search"></i>  Rechercher</button>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-
 
 <!--
 {% for gare in contexte_gares.items %}
@@ -71,16 +69,29 @@
 };
 $("input[id*=search_]").easyAutocomplete(options);
 
-$("input[id*=datetime_]").change(function(evt) {
-  var date = new Date($("input[id*=datetime_]").val());
-  $("input[id*=datetime_]").attr("type", "text");
-  $("input[id*=datetime_]").val(date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear());
-});
-$("input[id*=datetime_]").focus(function(evt) {
-  $("input[id*=datetime_]").attr("type", "date");
-  setTimeout('$("input[id*=datetime_]").click();', 500);
-});
-$("input[id*=datetime_]").attr("type", "text");
+$(function () {
+	$("#datetimepicker1").datetimepicker();
+    $("#datetimepicker2").datetimepicker();
+  });
+
+$("form").submit(function(){
+	var params = [
+					{name: 'gare_depart', value: $("input[id=search_depart]").val()},
+					{name: 'gare_arrivee', value: $("input[id=search_arrivee]").val()},
+					{name: 'date_depart', value: $("input[id=datetimepicker1]").val()},
+					{name: 'date_retour', value: $("input[id=datetimepicker2]").val()},
+				 ];
+
+	$(this).append($.map(params, function (param) {
+        return   $('<input>', {
+            type: 'hidden',
+            name: param.name,
+            value: param.value
+        })
+    }));
+
+	$("body").css("cursor", "wait");
+	});
 </script>
 
 

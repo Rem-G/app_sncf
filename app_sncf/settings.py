@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
+    'bootstrap_datepicker_plus',
 ]
 
 MIDDLEWARE = [
@@ -100,6 +101,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+BOOTSTRAP4 = {
+    'include_jquery': True,
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -127,4 +131,4 @@ STATICFILES_DIRS = (
 )
 
 LOGIN_URL = '/app/connexion/'
-LOGIN_REDIRECT_URL = '/app/gares/'
+LOGIN_REDIRECT_URL = '/app/voyage/'
