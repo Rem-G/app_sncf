@@ -28,11 +28,11 @@
 						<div class="vertical-line"></div>
 						<span class="span_datetime">Aller</span>
 						<br>
-             			<input type="text" class="datetimepicker-input form-rounded" id="datetimepicker1" data-toggle="datetimepicker" data-target="#datetimepicker1" placeholder="Aller : dates et horaires" />
+             			<input type="text" class="datetimepicker-input form-rounded" id="datetimepicker1" data-toggle="datetimepicker" data-target="#datetimepicker1" placeholder="Aller : dates et horaires" autocomplete="off"/>
     					<br><br>
     					<span class="span_datetime">Retour</span>
     					<br>
-            			<input type="text" class="datetimepicker-input form-rounded" id="datetimepicker2" data-toggle="datetimepicker" data-target="#datetimepicker2" placeholder="Retour : dates et horaires" />		
+            			<input type="text" class="datetimepicker-input form-rounded" id="datetimepicker2" data-toggle="datetimepicker" data-target="#datetimepicker2" placeholder="Retour : dates et horaires" autocomplete="off"/>		
 						<br><br><br>
 						<div style='text-align: center;'>
 							<button type="submit" class="btn btn-primary btn-lg" name="recherche_voyage" id="bouton_recherche"><i class="fas fa-search"></i>  Rechercher</button>
@@ -44,6 +44,13 @@
 	</div>
 </div>
 
+{% for key in contexte_voyage.main.journeys %}
+	{{key.departure_date_time}}
+	{{key.arrival_date_time}}
+	{{key.requested_date_time}}
+	{{key.type}}
+	<br>
+{% endfor %}
 <!--
 {% for gare in contexte_gares.items %}
 	{% for element in gare %}
@@ -70,9 +77,15 @@
 $("input[id*=search_]").easyAutocomplete(options);
 
 $(function () {
-	$("#datetimepicker1").datetimepicker();
-    $("#datetimepicker2").datetimepicker();
-  });
+	$("#datetimepicker1").datetimepicker({
+    format: 'YYYY/MM/DD HH:mm',
+    date : moment()
+	});
+    $("#datetimepicker2").datetimepicker({
+    format: 'YYYY/MM/D HH:mm',
+    date : moment()
+	});
+});
 
 $("form").submit(function(){
 	var params = [

@@ -89,7 +89,7 @@ class ContexteGares():
 					gare['insee'] = keys['insee']
 				if 'coord' in keys:
 					gare['coord'] = keys['coord']
-				dict_gares[keys['id']] = gare
+				dict_gares[keys['label']] = gare
 				gare = dict()
 
 		return dict_gares

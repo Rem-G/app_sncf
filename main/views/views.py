@@ -19,5 +19,7 @@ def update_gares(request):
 def voyage(request):
 	contexte_gares = ContexteGares(request).afficher_gares_contexte()#Obsolète ?
 	contexte_voyage = ContexteVoyage(request)
+	print(dir(contexte_voyage))
+	#print(contexte_voyage.main())
 	return render(request, 'main.html', locals())
 
