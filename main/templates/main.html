@@ -1,0 +1,87 @@
+{% extends "base_main.html" %}
+{% load staticfiles %}
+
+{% block contenu %}
+
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-danger" role="alert">{{ message|safe }}</div>
+    {% endfor %}
+{% endif %}
+
+<br>
+<div class="container">
+	<div class="row justify-content-center">
+	  	<div class="card" style="width: 40rem;">
+		    <div class="card-header">
+			    <h3 class="card-title"><i class="far fa-compass fa-lg"></i> Itinéraire</h3>
+		    </div>
+		    <div class="card-body">
+		        <div class="form-horizontal">
+		        	<form role="itineraire" method="post">
+			            <div class="form-group" id="choix_depart_arrivee">
+		            		{% csrf_token %} 
+						    <input type="text" placeholder="Départ" id="search_depart">
+						     <br>
+						    <input type="text" placeholder="Arrivée" id="search_arrivee">
+				        </div>
+						<div class="vertical-line">
+						</div>
+						<span class="span_datetime">Aller</span>
+						<br>
+    					<input class="form-rounded" type="datetime-local" placeholder="Aller : date et horaire" id="datetime_depart">
+    					<br>
+    					<span class="span_datetime">Retour</span>
+    					<br>
+    					<input class="form-rounded" type="datetime-local" placeholder="Retour : date et horaire" id="datetime_arrivee">
+				     </form>
+				</div>
+				<br><br>
+				<div style='text-align: center;'>
+				<button type="button" class="btn btn-primary btn-lg" id="bouton_recherche"><i class="fas fa-search"></i>  Rechercher</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!--
+{% for gare in contexte_gares.items %}
+	{% for element in gare %}
+		{{element.id}}<br>
+	{% endfor %}
+{% endfor %}-->
+
+
+
+<script type="text/javascript">
+	var options = {
+	url: "{% static 'json/gares.json' %}",
+
+	getValue: "label",
+
+	list: {
+		match: {
+			enabled: true
+		}
+	},
+
+	theme: 'round'
+};
+$("input[id*=search_]").easyAutocomplete(options);
+
+$("input[id*=datetime_]").change(function(evt) {
+  var date = new Date($("input[id*=datetime_]").val());
+  $("input[id*=datetime_]").attr("type", "text");
+  $("input[id*=datetime_]").val(date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear());
+});
+$("input[id*=datetime_]").focus(function(evt) {
+  $("input[id*=datetime_]").attr("type", "date");
+  setTimeout('$("input[id*=datetime_]").click();', 500);
+});
+$("input[id*=datetime_]").attr("type", "text");
+</script>
+
+
+{% endblock %}

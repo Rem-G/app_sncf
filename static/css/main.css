@@ -1,0 +1,33 @@
+    #choix_depart_arrivee.form-group{
+        float:left;
+    }
+
+    #bouton_recherche.btn.btn-primary.btn-lg{
+        background-color: #C70039;
+        border-color: #C70039;
+        border-radius: 1.5rem;
+    }
+
+    #bouton_recherche.btn.btn-primary.btn-lg:hover{
+        background-color: #900C3F;
+        border-color: #900C3F;
+    }
+
+    .form-rounded {
+        border-radius: 0.5rem;
+    }
+
+    .span_datetime{
+        color : gray;
+    }
+
+    .vertical-line{
+    float: left;
+    display: inline-block;
+    margin-left: 5%;
+    margin-right: 5%;
+    border:         none;
+    border-left:    1px solid hsla(2000, 15%, 50%,1000);
+    height:         20vh;
+    width:          1px;       
+}
