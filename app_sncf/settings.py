@@ -108,9 +108,9 @@ BOOTSTRAP4 = {
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fr-fr'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Paris'
 
 USE_I18N = True
 
@@ -130,5 +130,5 @@ STATICFILES_DIRS = (
  os.path.join(BASE_DIR, 'static'),
 )
 
-LOGIN_URL = '/app/connexion/'
+LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/app/voyage/'

@@ -75,6 +75,10 @@ class ContexteGares():
 		return infos_gares
 
 	def infos_gares(self, fichier):#renvoie toutes les gares du fichier
+		try:
+			os.chdir("./static/json/")#Se place dans le bon répertoire
+		except:
+			pass
 		infos_gares = self.fichier_gares(fichier)#Vérification du fichier + récupération de son contenu
 
 		dict_gares = dict()
@@ -95,10 +99,6 @@ class ContexteGares():
 		return dict_gares
 
 	def update_gares_json(self, fichier='gares.json'):
-		try:
-			os.chdir("./static/json/")
-		except:
-			pass
 		dict_gares = self.infos_gares(fichier)
 
 		if len(dict_gares) != int(self.infos_gares_api()['total_items']): #fichier à mettre à jour
@@ -107,11 +107,12 @@ class ContexteGares():
 			os.rename(fichier.split(".")[0]+"_new.json", fichier)
 		return None
 
-
+"""
 	def afficher_gares_contexte(self, fichier='gares.json'):
 		try:
 			os.chdir("./static/json/")
 		except:
 			pass
-		print("Current Working Directory " , os.getcwd())
+		#print("Current Working Directory " , os.getcwd())
 		return self.infos_gares(fichier)
+"""

@@ -17,9 +17,13 @@ def update_gares(request):
 		return HttpResponse("Fichier ms à jour")
 
 def voyage(request):
-	contexte_gares = ContexteGares(request).afficher_gares_contexte()#Obsolète ?
+	#contexte_gares = ContexteGares(request).afficher_gares_contexte()#Obsolète ?
 	contexte_voyage = ContexteVoyage(request)
-	print(dir(contexte_voyage))
-	#print(contexte_voyage.main())
+	request.session = contexte_voyage.request.session
+	
+	if contexte_voyage.message_err_voyage is not []:
+		for message_erreur in contexte_voyage.message_err_voyage:
+			messages.add_message(request, messages.ERROR, message_erreur)
+	#print(dir(contexte_voyage))
 	return render(request, 'main.html', locals())
 

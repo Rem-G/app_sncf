@@ -44,13 +44,24 @@
 	</div>
 </div>
 
+{{request.session.date_depart}}<br>
+{{request.session.date_retour}}<br>
+
 {% for key in contexte_voyage.main.journeys %}
-	{{key.departure_date_time}}
-	{{key.arrival_date_time}}
-	{{key.requested_date_time}}
-	{{key.type}}
-	<br>
+	Départ : {{request.session.gare_depart}} : {{key.departure_date_time}}<br>
+	Arrivée : {{request.session.gare_arrivee}} : {{key.arrival_date_time}}<br>
+	Heure souhaitée : {{key.requested_date_time}}<br>
+	Type : {{key.type}}<br>
+	Correspondances :<br><br>
+	{% for link in key.links.journeys %}
+		Correspondance heure départ : {{link.departure_date_time}}<br>
+		Correspondance heure arrivée : {{link.arrival_date_time}}<br>
+		Gare départ correspondance : {{link.sections.0.from.name}}<br>
+		Gare arrivée correspondance : {{link.sections.0.to.name}}<br><br>
+	{% endfor %}
+	<br><br>
 {% endfor %}
+
 <!--
 {% for gare in contexte_gares.items %}
 	{% for element in gare %}
@@ -82,7 +93,7 @@ $(function () {
     date : moment()
 	});
     $("#datetimepicker2").datetimepicker({
-    format: 'YYYY/MM/D HH:mm',
+    format: 'YYYY/MM/DD HH:mm',
     date : moment()
 	});
 });
