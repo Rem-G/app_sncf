@@ -76,7 +76,8 @@ class ContexteVoyage():
 				voyage['date_depart'] = self.request.POST['date_depart']
 				self.request.session['date_depart'] = self.request.POST['date_depart']
 			else:
-				self.message_err_voyage.append("Veuillez entrer une date de départ")
+				if "Veuillez entrer une date de départ" not in self.message_err_voyage:
+					self.message_err_voyage.append("Veuillez entrer une date de départ")
 
 		if 'date_retour' in self.request.POST:
 			try:#A supprimer à la mise en place du trajet retour
@@ -177,6 +178,18 @@ class ContexteVoyage():
 
 		return str(annee+"/"+mois+"/"+jour+" "+heure+":"+minutes)
 
+	def convertSeconds(self, seconds):
+	    h = seconds//(60*60)
+	    m = (seconds-h*60*60)//60
+	    s = seconds-(h*60*60)-(m*60)
+
+	    if len(str(h)) <= 1:
+	    	h = '0'+str(h)
+	    if len(str(m)) <= 1:
+	    	m = '0'+str(m)
+
+	    return str(h)+":"+str(m)
+
 	def requete_api(self):
 		#Format datetime YmdTHMS
 		voyage = self.requete_voyage()
@@ -197,6 +210,7 @@ class ContexteVoyage():
 						journey['horaire_depart'] = self.conversion_sncf_to_datetime(journey['departure_date_time'])
 						journey['horaire_arrivee'] = self.conversion_sncf_to_datetime(journey['arrival_date_time'])
 						journey['horaire_param'] = self.conversion_sncf_to_datetime(journey['requested_date_time'])
+						journey['temps_trajet'] = self.convertSeconds(journey['durations']['total'])
 						if journey['links'] is not [] and journey['nb_transfers'] > 0:
 							journey['links'] = self.links_journey(journey['links'])
 					return response

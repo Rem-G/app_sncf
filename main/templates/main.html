@@ -44,6 +44,41 @@
 	</div>
 </div>
 
+<div class="table-responsive">
+	<table class="table table-hover">
+	  <tbody>
+	  	{% for journey in contexte_voyage.main.journeys %}
+	    	<tr class="ligne_voyage">
+		      <th scope="row">{{journey.horaire_depart}}<br>{{journey.horaire_arrivee}}<p style="color:grey; font-size:80%;"> {{journey.temps_trajet}}</p></th>
+		      <td>{{request.session.gare_depart}}<br>{{request.session.gare_arrivee}}{% if journey.nb_transfers == 0 %}<p style="color:grey; font-size:80%;">direct</p>{% endif %}</td>
+			</tr>
+			{% if journey.nb_transfers > 0 %}
+				<tr style="display:none;" class="ligne_correspondance">
+				  	<th>
+				  		{% for correspondance in journey.links %}
+							Correspondance heure départ : {{correspondance.depart_section}}<br>
+							Correspondance heure arrivée : {{correspondance.arrivee_section}}<br>
+							Gare départ correspondance : {{correspondance.gare_depart_section}}<br>
+							Gare arrivée correspondance : {{correspondance.gare_arrivee_section}}<br>
+							Train : {{correspondance.train}}<br>
+							Type : {{correspondance.type}}<br>
+						{% endfor %}
+					</th>
+				</tr>
+			{% endif %}
+		{% endfor %}
+	  </tbody>
+	</table>
+</div>
+
+<script>
+	$(document).ready(function(){
+  $(".ligne_voyage").click(function(){
+    $(this).next(".ligne_correspondance").fadeToggle();
+  });
+});
+</script>
+
 {{request.session.date_depart}}<br>
 {{request.session.date_retour}}<br>
 
@@ -65,14 +100,6 @@
 		{% endfor %}
 	{% endif %}
 {% endfor %}
-
-<!--
-{% for gare in contexte_gares.items %}
-	{% for element in gare %}
-		{{element.id}}<br>
-	{% endfor %}
-{% endfor %}-->
-
 
 
 <script type="text/javascript">
@@ -120,6 +147,7 @@ $("form").submit(function(){
 
 	$("body").css("cursor", "wait");
 	});
+
 </script>
 
 
