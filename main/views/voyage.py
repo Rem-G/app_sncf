@@ -24,7 +24,6 @@ class ContexteVoyage():
     
 	def main(self):
 		if 'recherche_voyage' in self.request.POST:
-			self.run = True
 			return self.requete_api()
 
 	def auth_api(self, url):
@@ -127,10 +126,56 @@ class ContexteVoyage():
 			return True
 		return False
 
+	def correspondances_journey(self, response_links):
+		correspondances = dict()
+		liste_correspondances = list()
+		limite_nbre_correspondances = 0
+
+		if 'journeys' in response_links:#A remplacer par if 'journeys' in reponse_links	
+			for journey in response_links['journeys']:
+				if journey['type'] == 'best' or journey['type'] == 'rapid' and limite_nbre_correspondances < 2:
+					limite_nbre_correspondances += 1
+					sections = journey['sections']
+
+					for section in sections:
+						if 'from' in section and 'to' in section:
+							section_depart = section['from']
+							section_arrivee = section['to']
+
+							if 'stop_point' in section_depart and 'stop_point' in section_arrivee:
+								if section_depart['stop_point']['label'] != section_arrivee['stop_point']['label']:
+									correspondances['gare_depart_section'] = section_depart['stop_point']['label']
+									correspondances['gare_arrivee_section'] = section_arrivee['stop_point']['label']
+									correspondances['train'] = section_depart['id'], "train"
+									correspondances['depart_section'] = self.conversion_sncf_to_datetime(section['departure_date_time'])
+									correspondances['arrivee_section'] = self.conversion_sncf_to_datetime(section['arrival_date_time'])
+									correspondances['type'] = journey['type']
+
+									liste_correspondances.append(correspondances)
+
+									correspondances = dict()
+		return liste_correspondances
+
 	def links_journey(self, journey):
 		url = journey[0]['href']
 		response_links = self.auth_api(url).json()
+
+		#print(response_links['links'])
+
+		response_links = self.correspondances_journey(response_links)
+
 		return response_links
+
+	def conversion_sncf_to_datetime(self, horaire):
+		horaire = horaire.split("T")
+		annee = horaire[0][0:4]
+		mois = horaire[0][4:6]
+		jour = horaire[0][6:8]
+
+		heure = horaire[1][0:2]
+		minutes = horaire[1][2:4]
+
+		return str(annee+"/"+mois+"/"+jour+" "+heure+":"+minutes)
 
 	def requete_api(self):
 		#Format datetime YmdTHMS
@@ -138,31 +183,28 @@ class ContexteVoyage():
 		gare_depart_id = self.requete_gare('gare_depart', 'depart')
 		gare_arrivee_id = self.requete_gare('gare_arrivee', 'arrivee')
 
-		print(self.request.POST)
+		#print(self.request.POST)
 
 		datetime_voyage = voyage['JMA_depart']+'T'+voyage['heure_depart']+voyage['minutes_depart']+'00'
 
 		if voyage['date_depart'] is not '':
 			if self.verif_date(voyage['date_depart']):
-				url = 'https://api.sncf.com/v1/coverage/sncf/journeys?from={}&to={}&datetime={}&datetime_represents=departure&count=10'.format(gare_depart_id, gare_arrivee_id, datetime_voyage)
+				url = 'https://api.sncf.com/v1/coverage/sncf/journeys?from={}&to={}&datetime={}&datetime_represents=departure&count=7'.format(gare_depart_id, gare_arrivee_id, datetime_voyage)
 				response = self.auth_api(url).json()
 
-				for journey in response['journeys']:
-					if journey['links'] is not []:
-						journey['links'] = self.links_journey(journey['links'])
-							
-				return response
+				if 'journeys' in response:
+					for journey in response['journeys']:
+						journey['horaire_depart'] = self.conversion_sncf_to_datetime(journey['departure_date_time'])
+						journey['horaire_arrivee'] = self.conversion_sncf_to_datetime(journey['arrival_date_time'])
+						journey['horaire_param'] = self.conversion_sncf_to_datetime(journey['requested_date_time'])
+						if journey['links'] is not [] and journey['nb_transfers'] > 0:
+							journey['links'] = self.links_journey(journey['links'])
+					return response
 			else:
 				self.message_err_voyage.append("Date de départ passée")
 
 
 #status fare from links tags nb_transfers arrival_date_time co2_emission to requested_date_time departure_date_time duration type
-"""						
-						for key in journey['links']['journeys']:
-							print(key['sections'][0]['from']['name'])
-							for element in key['sections'][0]:
-								pass
-"""	
 
 
 

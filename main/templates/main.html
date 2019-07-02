@@ -48,18 +48,22 @@
 {{request.session.date_retour}}<br>
 
 {% for key in contexte_voyage.main.journeys %}
-	Départ : {{request.session.gare_depart}} : {{key.departure_date_time}}<br>
-	Arrivée : {{request.session.gare_arrivee}} : {{key.arrival_date_time}}<br>
-	Heure souhaitée : {{key.requested_date_time}}<br>
+	Horaire souhaité : {{key.horaire_param}}<br>
+	Départ : {{request.session.gare_depart}} : {{key.horaire_depart}}<br>
+	Arrivée : {{request.session.gare_arrivee}} : {{key.horaire_arrivee}}<br>
 	Type : {{key.type}}<br>
+	{% if key.links != '{}' %}
 	Correspondances :<br><br>
-	{% for link in key.links.journeys %}
-		Correspondance heure départ : {{link.departure_date_time}}<br>
-		Correspondance heure arrivée : {{link.arrival_date_time}}<br>
-		Gare départ correspondance : {{link.sections.0.from.name}}<br>
-		Gare arrivée correspondance : {{link.sections.0.to.name}}<br><br>
-	{% endfor %}
-	<br><br>
+		{% for correspondance in key.links %}
+			&nbsp&nbsp&nbsp&nbspCorrespondance heure départ : {{correspondance.depart_section}}<br>
+			&nbsp&nbsp&nbsp&nbspCorrespondance heure arrivée : {{correspondance.arrivee_section}}<br>
+			&nbsp&nbsp&nbsp&nbspGare départ correspondance : {{correspondance.gare_depart_section}}<br>
+			&nbsp&nbsp&nbsp&nbspGare arrivée correspondance : {{correspondance.gare_arrivee_section}}<br>
+			&nbsp&nbsp&nbsp&nbspTrain : {{correspondance.train}}<br>
+			&nbsp&nbsp&nbsp&nbspType : {{correspondance.type}}<br>
+			<br>
+		{% endfor %}
+	{% endif %}
 {% endfor %}
 
 <!--

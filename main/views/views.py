@@ -18,9 +18,12 @@ def update_gares(request):
 
 def voyage(request):
 	#contexte_gares = ContexteGares(request).afficher_gares_contexte()#Obsolète ?
-	contexte_voyage = ContexteVoyage(request)
+	run = False
+	if run == False:
+		contexte_voyage = ContexteVoyage(request)
+		run = True
 	request.session = contexte_voyage.request.session
-	
+
 	if contexte_voyage.message_err_voyage is not []:
 		for message_erreur in contexte_voyage.message_err_voyage:
 			messages.add_message(request, messages.ERROR, message_erreur)
