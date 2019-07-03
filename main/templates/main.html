@@ -45,24 +45,34 @@
 </div>
 
 <div class="table-responsive">
-	<table class="table table-hover">
+	<table class="table">
 	  <tbody>
 	  	{% for journey in contexte_voyage.main.journeys %}
-	    	<tr class="ligne_voyage">
+	    	<tr class="ligne_voyage ligne_voyage_hover">
 		      <th scope="row">{{journey.horaire_depart}}<br>{{journey.horaire_arrivee}}<p style="color:grey; font-size:80%;"> {{journey.temps_trajet}}</p></th>
 		      <td>{{request.session.gare_depart}}<br>{{request.session.gare_arrivee}}{% if journey.nb_transfers == 0 %}<p style="color:grey; font-size:80%;">direct</p>{% endif %}</td>
 			</tr>
 			{% if journey.nb_transfers > 0 %}
 				<tr style="display:none;" class="ligne_correspondance">
 				  	<th>
-				  		{% for correspondance in journey.links %}
-							Correspondance heure départ : {{correspondance.depart_section}}<br>
-							Correspondance heure arrivée : {{correspondance.arrivee_section}}<br>
-							Gare départ correspondance : {{correspondance.gare_depart_section}}<br>
-							Gare arrivée correspondance : {{correspondance.gare_arrivee_section}}<br>
-							Train : {{correspondance.train}}<br>
-							Type : {{correspondance.type}}<br>
-						{% endfor %}
+				  		<div class="row">
+							<div class="col-lg-7 mx-auto">
+					  			<ul class="timeline">
+							  		{% for correspondance in journey.links %}
+							  				<li class="timeline-item bg-white rounded ml-3 p-4 shadow">
+							  					<div class="timeline-arrow"></div>
+							  					<h5>{{correspondance.depart_section}}
+							  						<p style="font-size:90%;">{{correspondance.gare_depart_section}}</p>
+							  					</h5>
+							  					<h5>{{correspondance.arrivee_section}}
+							  						<p style="font-size:90%;">{{correspondance.gare_arrivee_section}}</p>
+							  					</h5>
+							  					<p>{{correspondance.train}}<br>{{correspondance.type}} </p>
+							  				<li>
+									{% endfor %}
+								</ul>
+					  		</div>
+				  		</div>
 					</th>
 				</tr>
 			{% endif %}

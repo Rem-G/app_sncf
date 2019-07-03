@@ -127,43 +127,47 @@ class ContexteVoyage():
 			return True
 		return False
 
-	def correspondances_journey(self, response_links):
+	def correspondances_journey(self, response_links, duration, departure_date_time):
 		correspondances = dict()
 		liste_correspondances = list()
 		limite_nbre_correspondances = 0
 
-		if 'journeys' in response_links:#A remplacer par if 'journeys' in reponse_links	
+		if 'journeys' in response_links:
 			for journey in response_links['journeys']:
-				if journey['type'] == 'best' or journey['type'] == 'rapid' and limite_nbre_correspondances < 2:
-					limite_nbre_correspondances += 1
-					sections = journey['sections']
+				if journey['departure_date_time'] == departure_date_time:
+					if journey['durations']['total'] == duration:
+						if limite_nbre_correspondances < 2:
+							limite_nbre_correspondances += 2
+							sections = journey['sections']
 
-					for section in sections:
-						if 'from' in section and 'to' in section:
-							section_depart = section['from']
-							section_arrivee = section['to']
+							for section in sections:
+								if 'from' in section and 'to' in section:
+									section_depart = section['from']
+									section_arrivee = section['to']
 
-							if 'stop_point' in section_depart and 'stop_point' in section_arrivee:
-								if section_depart['stop_point']['label'] != section_arrivee['stop_point']['label']:
-									correspondances['gare_depart_section'] = section_depart['stop_point']['label']
-									correspondances['gare_arrivee_section'] = section_arrivee['stop_point']['label']
-									correspondances['train'] = section_depart['id'], "train"
-									correspondances['depart_section'] = self.conversion_sncf_to_datetime(section['departure_date_time'])
-									correspondances['arrivee_section'] = self.conversion_sncf_to_datetime(section['arrival_date_time'])
-									correspondances['type'] = journey['type']
+									if 'stop_point' in section_depart and 'stop_point' in section_arrivee:
+										if section_depart['stop_point']['label'] != section_arrivee['stop_point']['label']:
+											correspondances['gare_depart_section'] = section_depart['stop_point']['label']
+											correspondances['gare_arrivee_section'] = section_arrivee['stop_point']['label']
+											correspondances['train'] = section_depart['id'], "train"
+											correspondances['depart_section'] = self.conversion_sncf_to_datetime(section['departure_date_time'])
+											correspondances['arrivee_section'] = self.conversion_sncf_to_datetime(section['arrival_date_time'])
+											correspondances['type'] = journey['type']
 
-									liste_correspondances.append(correspondances)
+											liste_correspondances.append(correspondances)
 
-									correspondances = dict()
+											correspondances = dict()
 		return liste_correspondances
 
 	def links_journey(self, journey):
-		url = journey[0]['href']
+		url = journey['links'][0]['href']
+		duration = journey['durations']['total']
+		departure_date_time = journey['departure_date_time']
+
 		response_links = self.auth_api(url).json()
 
 		#print(response_links['links'])
-
-		response_links = self.correspondances_journey(response_links)
+		response_links = self.correspondances_journey(response_links, duration, departure_date_time)
 
 		return response_links
 
@@ -212,7 +216,7 @@ class ContexteVoyage():
 						journey['horaire_param'] = self.conversion_sncf_to_datetime(journey['requested_date_time'])
 						journey['temps_trajet'] = self.convertSeconds(journey['durations']['total'])
 						if journey['links'] is not [] and journey['nb_transfers'] > 0:
-							journey['links'] = self.links_journey(journey['links'])
+							journey['links'] = self.links_journey(journey)
 					return response
 			else:
 				self.message_err_voyage.append("Date de départ passée")
