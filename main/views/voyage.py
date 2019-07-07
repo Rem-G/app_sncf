@@ -19,9 +19,7 @@ class ContexteVoyage():
 		self.request = request
 		self.message_err_voyage = list()
 		self.token_auth = 'c644ccc4-01b2-4b7e-863d-4aa700dc7d73'
-		self.run = False
-		self.main()
-    
+
 	def main(self):
 		if 'recherche_voyage' in self.request.POST:
 			return self.requete_api()
@@ -137,7 +135,7 @@ class ContexteVoyage():
 				if journey['departure_date_time'] == departure_date_time:
 					if journey['durations']['total'] == duration:
 						if limite_nbre_correspondances < 2:
-							limite_nbre_correspondances += 2
+							limite_nbre_correspondances += 1
 							sections = journey['sections']
 
 							for section in sections:
@@ -149,7 +147,7 @@ class ContexteVoyage():
 										if section_depart['stop_point']['label'] != section_arrivee['stop_point']['label']:
 											correspondances['gare_depart_section'] = section_depart['stop_point']['label']
 											correspondances['gare_arrivee_section'] = section_arrivee['stop_point']['label']
-											correspondances['train'] = section_depart['id'], "train"
+											correspondances['train'] = section_depart['id']
 											correspondances['depart_section'] = self.conversion_sncf_to_datetime(section['departure_date_time'])
 											correspondances['arrivee_section'] = self.conversion_sncf_to_datetime(section['arrival_date_time'])
 											correspondances['type'] = journey['type']
@@ -199,8 +197,6 @@ class ContexteVoyage():
 		voyage = self.requete_voyage()
 		gare_depart_id = self.requete_gare('gare_depart', 'depart')
 		gare_arrivee_id = self.requete_gare('gare_arrivee', 'arrivee')
-
-		#print(self.request.POST)
 
 		datetime_voyage = voyage['JMA_depart']+'T'+voyage['heure_depart']+voyage['minutes_depart']+'00'
 

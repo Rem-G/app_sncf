@@ -36,6 +36,7 @@
 						<br><br><br>
 						<div style='text-align: center;'>
 							<button type="submit" class="btn btn-primary btn-lg" name="recherche_voyage" id="bouton_recherche"><i class="fas fa-search"></i>  Rechercher</button>
+		      				<button type="submit" class="btn btn-primary btn-lg" name="comparer_prix_voyage" id="bouton_comparateur">Comparer les prix pour ce voyage</button>
 						</div>
 					</form>
 				</div>
@@ -43,14 +44,14 @@
 		</div>
 	</div>
 </div>
-
+<br>
 <div class="table-responsive">
 	<table class="table">
 	  <tbody>
 	  	{% for journey in contexte_voyage.main.journeys %}
 	    	<tr class="ligne_voyage ligne_voyage_hover">
-		      <th scope="row">{{journey.horaire_depart}}<br>{{journey.horaire_arrivee}}<p style="color:grey; font-size:80%;"> {{journey.temps_trajet}}</p></th>
-		      <td>{{request.session.gare_depart}}<br>{{request.session.gare_arrivee}}{% if journey.nb_transfers == 0 %}<p style="color:grey; font-size:80%;">direct</p>{% endif %}</td>
+		     	<th scope="row">{{journey.horaire_depart}}<br>{{journey.horaire_arrivee}}<p style="color:grey; font-size:80%;"> {{journey.temps_trajet}}</p></th>
+		    	<td>{{request.session.gare_depart}}<br>{{request.session.gare_arrivee}}{% if journey.nb_transfers == 0 %}<p style="color:grey; font-size:80%;">direct</p>{% endif %}</td>
 			</tr>
 			{% if journey.nb_transfers > 0 %}
 				<tr style="display:none;" class="ligne_correspondance">
@@ -59,17 +60,38 @@
 							<div class="col-lg-7 mx-auto">
 					  			<ul class="timeline">
 							  		{% for correspondance in journey.links %}
-							  				<li class="timeline-item bg-white rounded ml-3 p-4 shadow">
-							  					<div class="timeline-arrow"></div>
-							  					<h5>{{correspondance.depart_section}}
-							  						<p style="font-size:90%;">{{correspondance.gare_depart_section}}</p>
-							  					</h5>
-							  					<h5>{{correspondance.arrivee_section}}
-							  						<p style="font-size:90%;">{{correspondance.gare_arrivee_section}}</p>
-							  					</h5>
-							  					<p>{{correspondance.train}}<br>{{correspondance.type}} </p>
-							  				<li>
+						  				<li class="timeline-item bg-white rounded ml-3 p-4 shadow">
+						  					<div class="timeline-arrow"></div>
+						  					<h5>{{correspondance.depart_section}}
+						  						<p style="font-size:90%;">{{correspondance.gare_depart_section}}</p>
+						  					</h5>
+						  					<h5>{{correspondance.arrivee_section}}
+						  						<p style="font-size:90%;">{{correspondance.gare_arrivee_section}}</p>
+						  					</h5>
+						  					<p>{{correspondance.train}}<br>{{correspondance.type}} </p>
+						  				<li>
 									{% endfor %}
+								</ul>
+					  		</div>
+				  		</div>
+					</th>
+				</tr>
+			{% elif journey.nb_transfers == 0 %}
+				<tr style="display:none;" class="ligne_correspondance">
+				  	<th>
+				  		<div class="row">
+							<div class="col-lg-7 mx-auto">
+					  			<ul class="timeline">
+					  				<li class="timeline-item bg-white rounded ml-3 p-4 shadow">
+					  					<div class="timeline-arrow"></div>
+					  					<h5>{{journey.horaire_depart}}
+					  						<p style="font-size:90%;">{{request.session.gare_depart}}</p>
+					  					</h5>
+					  					<h5>{{journey.horaire_arrivee}}
+					  						<p style="font-size:90%;">{{request.session.gare_arrivee}}</p>
+					  					</h5>
+					  					<p>{{correspondance.train}}<br>{{correspondance.type}} </p>
+					  				<li>
 								</ul>
 					  		</div>
 				  		</div>
@@ -88,29 +110,6 @@
   });
 });
 </script>
-
-{{request.session.date_depart}}<br>
-{{request.session.date_retour}}<br>
-
-{% for key in contexte_voyage.main.journeys %}
-	Horaire souhaité : {{key.horaire_param}}<br>
-	Départ : {{request.session.gare_depart}} : {{key.horaire_depart}}<br>
-	Arrivée : {{request.session.gare_arrivee}} : {{key.horaire_arrivee}}<br>
-	Type : {{key.type}}<br>
-	{% if key.links != '{}' %}
-	Correspondances :<br><br>
-		{% for correspondance in key.links %}
-			&nbsp&nbsp&nbsp&nbspCorrespondance heure départ : {{correspondance.depart_section}}<br>
-			&nbsp&nbsp&nbsp&nbspCorrespondance heure arrivée : {{correspondance.arrivee_section}}<br>
-			&nbsp&nbsp&nbsp&nbspGare départ correspondance : {{correspondance.gare_depart_section}}<br>
-			&nbsp&nbsp&nbsp&nbspGare arrivée correspondance : {{correspondance.gare_arrivee_section}}<br>
-			&nbsp&nbsp&nbsp&nbspTrain : {{correspondance.train}}<br>
-			&nbsp&nbsp&nbsp&nbspType : {{correspondance.type}}<br>
-			<br>
-		{% endfor %}
-	{% endif %}
-{% endfor %}
-
 
 <script type="text/javascript">
 	var options = {

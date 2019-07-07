@@ -18,6 +18,10 @@ body{
     border-color: #900C3F;
 }
 
+#bouton_comparateur{
+    border-radius: 1.5rem;
+}
+
 .form-rounded {
     border-radius: 0.5rem;
 }
