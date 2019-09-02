@@ -10,8 +10,24 @@
 
  
   <body>
-  	<p>Contient première et seconde classe</p>
+  	<p>Moins chère : Seconde classe, plus cher : Business première, intermédiaire : Première classe</p>
   	<div id="chart_div"></div>
+
+    <div>
+      <input type="checkbox" id="2e_classe">
+      <label for="2e_classe">2e classe</label>
+    </div>
+
+    <div>
+      <input type="checkbox" id="business_premiere">
+      <label for="business_premiere">Business première</label>
+    </div>
+
+    <div>
+      <input type="checkbox" id="1e_classe">
+      <label for="1e_classe">1ere classe</label>
+    </div>
+
   </body>
 
 <script>
@@ -33,21 +49,22 @@
     data.addColumn('string', 'Date');
     data.addColumn('number', 'Prix');
     for (trajet in contexte){
-    	console.log(contexte[trajet])
+      console.log(contexte[trajet])
     	data.addRows([
     		[contexte[trajet].horaire, parseFloat(contexte[trajet].prix)],
     	]);
-    }
+    };
 
 
     // Set chart options
     // Instantiate and draw our chart, passing in some options.
-	var chart = new google.charts.Bar(document.getElementById('chart_div'));
-	var chartwidth = $('.chart_div').width();
-   	var options = {      
-		'title': 'Comparateur',
-    	chartArea: {width:chartwidth,left:20,top:20,height:110},
-	}; 
+  	var chart = new google.charts.Bar(document.getElementById('chart_div'));
+  	var chartwidth = $('.chart_div').width();
+   	var options = {  
+    	'title': 'Comparateur',
+      'colors': ['#e0440e', '#e6693e', '#ec8f6e'],
+      chartArea: {width:chartwidth,left:20,top:20,height:110},
+    }; 
     chart.draw(data, options);
   };
 </script>

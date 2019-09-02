@@ -31,4 +31,4 @@ def voyage(request):
 			for message_erreur in contexte_voyage.message_err_voyage:
 				messages.add_message(request, messages.ERROR, message_erreur)
 		#print(dir(contexte_voyage))
-		return render(request, 'main.html', locals())	
+		return render(request, 'main.html', locals())

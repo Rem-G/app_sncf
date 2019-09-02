@@ -25,7 +25,7 @@ SECRET_KEY = 'qbn81pbbj5ai4d$-$mdxh!95(0va_d_-%n6j1s*1+ah^_d5&a7'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.0.95']
 
 
 # Application definition
@@ -118,6 +118,19 @@ USE_L10N = True
 
 USE_TZ = True
 
+import subprocess
+
+networks = str(subprocess.check_output(['ifconfig'])).split('\n\n')
+
+for net in networks:
+    try:
+        ip = net.strip().split('inet')[1].strip().split(' ')[0]
+        if ip != "127.0.0.1":
+            ALLOWED_HOSTS.append(ip)
+
+        print(ALLOWED_HOSTS)
+    except IndexError:
+        continue
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
